@@ -8,36 +8,37 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements  UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+
     @Override
-    public User createUser(User user) {
+    public User addUser(User user) {
         return userRepository.save(user);
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUser() {
         return (List<User>) userRepository.findAll();
     }
 
     @Override
-    public User getUserById(long id) {
+    public User getUserByid(long id) {
         return userRepository.findById(id).get();
     }
 
     @Override
-    public void deleteUser(long id) {
-        userRepository.deleteById(id);
-    }
-
-    @Override
-    public User updateuser(User user, long id) {
+    public User updateUser(long id, User user) {
         User user1 = userRepository.findById(id).get();
         user1.setEmail(user.getEmail());
         user1.setpNo(user.getpNo());
         user1.setAddress(user.getAddress());
         return userRepository.save(user1);
+    }
+
+    @Override
+    public void deleteUser(long id) {
+        userRepository.deleteById(id);
     }
 }
