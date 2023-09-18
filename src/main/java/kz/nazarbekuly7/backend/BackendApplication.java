@@ -3,6 +3,7 @@ package kz.nazarbekuly7.backend;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+
 @SpringBootApplication(scanBasePackages = "kz.nazarbekuly7.backend")
 public class BackendApplication {
 
@@ -10,4 +11,6 @@ public class BackendApplication {
         SpringApplication.run(BackendApplication.class, args);
     }
 
+
 }
+

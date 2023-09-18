@@ -17,6 +17,18 @@ public class User {
 
     private String address;
 
+    @Lob
+    @Column(name = "user_image", columnDefinition = "BLOB")
+    private byte[] userImage;
+
+    public byte[] getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(byte[] userImage) {
+        this.userImage = userImage;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

@@ -3,8 +3,14 @@ package kz.nazarbekuly7.backend.controller;
 import kz.nazarbekuly7.backend.model.User;
 import kz.nazarbekuly7.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:4200/")
@@ -15,11 +21,33 @@ public class ClientController {
     private UserService userService;
 
     @PostMapping("/add")
-    public String adduser(@RequestBody User user){
-        userService.addUser(user);
-        return "User Added Successfully...";
+    public ResponseEntity<String> addUser(
+            @RequestParam("file") MultipartFile file,
+            @ModelAttribute User user
+    ) {
+        try {
+            if (!file.isEmpty()) {
+                user.setUserImage(file.getBytes());
+            }
+            userService.addUser(user);
+            return ResponseEntity.ok("User Added Successfully...");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file.");
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid user data.");
+        }
     }
 
+
+    @GetMapping("/user/image/{id}")
+    public ResponseEntity<byte[]> getUserImage(@PathVariable("id") long id) {
+        User user = userService.getUserByid(id);
+        byte[] image = user.getUserImage();
+        // Установка заголовков для передачи изображения
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.IMAGE_PNG);
+        return new ResponseEntity<>(image, headers, HttpStatus.OK);
+    }
     @GetMapping("/users")
     public List<User> getUsers(){
         System.out.println("Users..");
